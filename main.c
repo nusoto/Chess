@@ -209,34 +209,34 @@ int move_pawn_black_legal(int from, int to, int* game)
   return 0;
 }
 
-int legal_move(int from, int to, int* game)
+int legal_move(int from, int to, int* game, int turn)
 {
-  if (game[from] == 0 || side_in_pos(from, game) == side_in_pos(to, game) || from > 63 || to > 63 || from < 0 || to < 0)
+  if (game[from] == 0 || side_in_pos(from, game) == side_in_pos(to, game) || from > 63 || to > 63 || from < 0 || to < 0 || side_in_pos(from, game) != turn)
   {
     return 0;
   }
   switch (game[from])
   {
     case 1:
-    case 2: if (move_king_legal(from, to, game)) return 1; return 0;
+    case 2: return move_king_legal(from, to, game);
     case 3:
-    case 4: if (move_queen_legal(from, to, game)) return 1; return 0;
+    case 4: return move_queen_legal(from, to, game);
     case 5:
-    case 6: if (move_root_legal(from, to, game)) return 1; return 0;
+    case 6: return move_root_legal(from, to, game);
     case 7:
-    case 8: if (move_bishop_legal(from, to, game)) return 1; return 0;
+    case 8: return move_bishop_legal(from, to, game);
     case 9:
-    case 10: if (move_knight_legal(from, to, game)) return 1; return 0;
-    case 11: if (move_pawn_white_legal(from, to, game)) return 1; return 0;
-    case 12: if (move_pawn_black_legal(from, to, game)) return 1; return 0;
+    case 10: return move_knight_legal(from, to, game);
+    case 11: return move_pawn_white_legal(from, to, game);
+    case 12: return move_pawn_black_legal(from, to, game);
     default: return 0;
   }
   return -1;
 }
 
-int move(int from, int to, int* current_game)
+int move(int from, int to, int* current_game, int turn)
 {
-  if (!legal_move(from, to, current_game))
+  if (!legal_move(from, to, current_game, turn))
   {
     return 0;
   }
@@ -304,7 +304,7 @@ int main(void) {
   char* input_string;
   int* matrix_of_table;
   char* conversion_type;
-  int move_from, move_to, show_table = 0;
+  int move_from, move_to, show_table = 0, turn = 1;
 
   input_string = calloc(73, sizeof(char));
   conversion_type = calloc(14, sizeof(char));
@@ -323,13 +323,18 @@ int main(void) {
     printf("\n");
     scanf("%d %d", &move_from, &move_to);
     printf("\n");
-    if (move_from == move_to)
-    {
-      break;
-    }
-    if (!move(move_from, move_to, matrix_of_table))
+    if (!move(move_from, move_to, matrix_of_table, turn))
     {
       printf("Invalid Move!\n");
+      continue;
+    }
+    if (turn == 1)
+    {
+      turn = 2;
+    }
+    else
+    {
+      turn = 1;
     }
   }
 
