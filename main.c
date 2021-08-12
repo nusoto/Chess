@@ -304,7 +304,7 @@ int main(void) {
   char* input_string;
   int* matrix_of_table;
   char* conversion_type;
-  int move_from, move_to, show_table = 0, turn = 1;
+  int move_from = 0, move_to = 0, show_table = 0, turn = 1;
 
   input_string = calloc(73, sizeof(char));
   conversion_type = calloc(14, sizeof(char));
